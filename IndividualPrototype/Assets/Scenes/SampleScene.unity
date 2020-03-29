@@ -387,7 +387,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -412,7 +412,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 617493839}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1319,7 +1319,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 7cfc830af0925cb42beafe3d3dce7c77,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.57264
+      value: 0.54
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7cfc830af0925cb42beafe3d3dce7c77,
         type: 3}
@@ -1374,7 +1374,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 7cfc830af0925cb42beafe3d3dce7c77,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.13061923
+      value: 0.06955082
       objectReference: {fileID: 0}
     - target: {fileID: -2416733968201007103, guid: 7cfc830af0925cb42beafe3d3dce7c77,
         type: 3}
