@@ -16,7 +16,7 @@ public class RenderCameraTestScript : MonoBehaviour
         }
 
         mc.targetTexture = new RenderTexture(Screen.width, Screen.height, 40);
-        mc.targetTexture.useDynamicScale=true;
+       // mc.targetTexture.useDynamicScale=true;
         material.mainTexture = mc.targetTexture;
     }
 }
