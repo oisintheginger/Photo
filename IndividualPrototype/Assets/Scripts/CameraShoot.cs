@@ -5,19 +5,48 @@ using UnityEngine;
 
 public class CameraShoot : MonoBehaviour
 {
-    [SerializeField]Camera heldCamera;
-    public RenderTexture tex;
+    [SerializeField] Camera heldCamera;
+    [SerializeField] GameObject cameraObject;
+
+    [SerializeField] Transform aimingPos, notAimingPos;
+    bool Aiming;
+    //public RenderTexture tex;
+    [SerializeField] float shootWait =2f;
+    float shootTimer;
     Ray camerashootRay;
 
     private void Start()
     {
         Directory.CreateDirectory(Application.dataPath + "/ScreenShots");
+        shootTimer = shootWait;
     }
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if(Input.GetAxis("RightTrigger")<0)
         {
-            Shoot();
+            Aiming = true;
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Shoot();
+            }
+        }
+        else
+        {
+            Aiming = false;
+        }
+
+        MoveCameraToPosition(Aiming);
+    }
+
+    void MoveCameraToPosition(bool isAiming)
+    {
+        if(isAiming)
+        {
+            cameraObject.transform.position = Vector3.Lerp(cameraObject.transform.position, aimingPos.position, 5f * Time.deltaTime);
+        }
+        else
+        {
+            cameraObject.transform.position = Vector3.Lerp(cameraObject.transform.position, notAimingPos.position, 5f * Time.deltaTime);
         }
     }
 
@@ -29,11 +58,13 @@ public class CameraShoot : MonoBehaviour
         {
             if (rh.collider.gameObject.tag == "Enemy")
             {
-                SaveTexturePNG(toTexture2D(heldCamera.targetTexture));
+                //SaveTexturePNG(toTexture2D(heldCamera.targetTexture));
                 Debug.Log(Application.dataPath);
             }
         }
     }
+
+    //Sources for saving rendertexture data to a png file
     //https://stackoverflow.com/questions/44264468/convert-rendertexture-to-texture2d 
     //https://answers.unity.com/questions/862685/saving-screenshot-and-using-it-as-texture-at-runti.html
     string NameForScreenshot(int i)
