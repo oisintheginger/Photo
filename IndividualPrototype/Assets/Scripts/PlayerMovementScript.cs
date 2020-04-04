@@ -11,12 +11,11 @@ public class PlayerMovementScript : MonoBehaviour
     public float maxSpeed, minSpeed, maxForce, boostForce, accelerationForce, brakeForce, xZPlaneSpeed, jumpForce, turnSpeed, turnScaler;
     float storedMaxSpeed;
     [SerializeField, Range(0, 1)] float steeringScaler;
-    [SerializeField] bool isGrounded;
+    public bool isGrounded;
     [SerializeField] Transform groundTransform, slopeTransform;
 
 
     Ray groundCheckRay;
-    Ray rampRay; 
     private void Awake()
     {
         pRB = this.gameObject.GetComponent<Rigidbody>();
@@ -53,7 +52,6 @@ public class PlayerMovementScript : MonoBehaviour
 
     void Motion()
     {
-        pRB.drag = 0;
 
         var velocity = pRB.velocity;
 
@@ -71,17 +69,20 @@ public class PlayerMovementScript : MonoBehaviour
         {
             maxSpeed = storedMaxSpeed;
         }
-
-        pRB.AddForce((transform.forward) * accelerationForce * Input.GetAxisRaw("Vertical"), ForceMode.VelocityChange);
-        pRB.AddForce((transform.right) * accelerationForce * Input.GetAxisRaw("Horizontal"), ForceMode.VelocityChange);
-        if (xZPlaneSpeed >= maxSpeed)
+        if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.5 || Mathf.Abs(Input.GetAxisRaw("Vertical")) > 0.5)
         {
-            pRB.velocity = xzSpeed;
+            pRB.AddForce((transform.forward) * accelerationForce * Input.GetAxisRaw("Vertical"), ForceMode.VelocityChange);
+            pRB.AddForce((transform.right) * accelerationForce * Input.GetAxisRaw("Horizontal"), ForceMode.VelocityChange);
+
+            if (xZPlaneSpeed >= maxSpeed)
+            {
+                pRB.velocity = xzSpeed;
+            }
         }
+        
 
         if (Input.GetAxis(jumpAxis) > 0.9f && isGrounded)
         {
-
             pRB.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
         }
 

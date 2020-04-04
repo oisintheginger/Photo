@@ -6,6 +6,15 @@ TagManager:
   tags:
   - Ground
   - Enemy
+  - Entity
+  - Electricity
+  - Mass
+  - Moving
+  - Timed
+  - ElectricityApply
+  - MassApply
+  - TimedApply
+  - MovingApply
   layers:
   - Default
   - TransparentFX
