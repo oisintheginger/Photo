@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.AI;
+using TMPro;
 
 [System.Serializable]
 public class StoredProperties
@@ -16,9 +18,13 @@ public class StoredProperties
 
 public class CameraShoot : MonoBehaviour
 {
+    [SerializeField] TMP_Text StoredPropertyUI;
     [SerializeField] Camera heldCamera;
     [SerializeField] float FOVScaler, minFOV, maxFOV, fovDefault;
     [SerializeField] GameObject cameraObject;
+    [SerializeField] AudioSource playerAudioSource;
+    [SerializeField] AudioClip readPropertySFX, applyPropertySFX, enemyKill;
+
 
     public StoredProperties myStoredProperties;
 
@@ -32,6 +38,7 @@ public class CameraShoot : MonoBehaviour
 
     private void Start()
     {
+        playerAudioSource = this.gameObject.GetComponent<AudioSource>();
         Directory.CreateDirectory(Application.dataPath + "/ScreenShots");
         myStoredProperties = new StoredProperties();
         if(fovDefault==0)
@@ -43,11 +50,11 @@ public class CameraShoot : MonoBehaviour
     
     private void Update()
     {
+        StoredPropertyUI.text = "Storing "+ myStoredProperties.storedGameObjectTag;
         fovDefault = Mathf.Clamp(fovDefault, minFOV, maxFOV);
         heldCamera.GetComponent<Camera>().fieldOfView = fovDefault;
         if (Mathf.Abs(Input.GetAxis("Zoom"))>0)
         {
-            
             fovDefault += FOVScaler * -Input.GetAxis("Zoom") * Time.deltaTime;
         }
         
@@ -84,18 +91,21 @@ public class CameraShoot : MonoBehaviour
                 case "Mass":
                     myStoredProperties.Mass = objecttoRead.GetComponent<Rigidbody>().mass;
                     myStoredProperties.storedGameObjectTag = objecttoRead.tag;
+                    playerAudioSource.PlayOneShot(readPropertySFX);
                     Debug.Log("Read: Mass " + myStoredProperties.Mass);
                     break;
 
                 case "Electricity":
                     myStoredProperties.Electricity = 10f;
                     myStoredProperties.storedGameObjectTag = objecttoRead.tag;
+                    playerAudioSource.PlayOneShot(readPropertySFX);
                     Debug.Log("Read: Electricity " + myStoredProperties.Electricity);
                     break;
 
                 case "Timed":
                     myStoredProperties.Timed = true;
                     myStoredProperties.storedGameObjectTag = objecttoRead.tag;
+                    playerAudioSource.PlayOneShot(readPropertySFX);
                     Debug.Log("Read: Timed " + myStoredProperties.Timed);
                     break;
 
@@ -103,6 +113,7 @@ public class CameraShoot : MonoBehaviour
                 case "Moving":
                     myStoredProperties.Moving = true;
                     myStoredProperties.storedGameObjectTag = objecttoRead.tag;
+                    playerAudioSource.PlayOneShot(readPropertySFX);
                     Debug.Log("Read: Moving " + myStoredProperties.Moving);
                     break;
             }
@@ -145,30 +156,56 @@ public class CameraShoot : MonoBehaviour
                         Debug.Log("Applied: Moving " + myStoredProperties.Moving);
                         break;
                 }
+                playerAudioSource.PlayOneShot(applyPropertySFX);
             }
             if(rH.collider.tag =="Enemy")
             {
+                AudioSource enemyAudio = rH.collider.gameObject.GetComponent<AudioSource>();
                 switch (myStoredProperties.storedGameObjectTag)
                 {
                     case "Mass":
-                        //Decrease Enemy Speed
-                        Debug.Log("Applied: Mass " + myStoredProperties.Mass);
+                        if(1 <= myStoredProperties.Mass)
+                        {
+                            Debug.Log("less than");
+                            rH.collider.gameObject.GetComponent<EnemyScript>().aggressiveSpeed *= 0.25f;
+                            rH.collider.gameObject.GetComponent<EnemyScript>().passiveSpeed *= 0.25f;
+                            rH.collider.gameObject.GetComponent<EnemyScript>().ShootingTimer *= 2f;
+                        }
+                        else
+                        {
+                            
+                            rH.collider.gameObject.GetComponent<EnemyScript>().aggressiveSpeed *= 1.5f;
+                            rH.collider.gameObject.GetComponent<EnemyScript>().passiveSpeed *= 1.5f;
+                            rH.collider.gameObject.GetComponent<EnemyScript>().ShootingTimer *= 0.5f;
+                        }
+                        enemyAudio.PlayOneShot(enemyKill);
+                        ClearStoredProperties();
                         break;
 
                     case "Electricity":
-                        //Electrocute Enemy
+                        enemyAudio.PlayOneShot(enemyKill);
+                        rH.collider.gameObject.GetComponentInChildren<Animator>().SetTrigger("Death");
+                        Destroy(rH.collider.gameObject, 0.8f);
+                        ClearStoredProperties();
                         break;
 
                     case "Timed":
+                        StartCoroutine(kill(rH.collider.gameObject, enemyAudio));
+                        playerAudioSource.PlayOneShot(applyPropertySFX);
                         //Kill enemys after time limit
-                        Debug.Log("Applied: Timed " + myStoredProperties.Timed);
                         break;
                 }
             }
         }
     }
 
-
+    IEnumerator kill(GameObject kill, AudioSource enemyAudio)
+    {
+        yield return new WaitForSeconds(3f);
+        enemyAudio.PlayOneShot(enemyKill);
+        kill.GetComponentInChildren<Animator>().SetTrigger("Death");
+        Destroy(kill, 0.7f);
+    }
     void ClearStoredProperties()
     {
         myStoredProperties.Mass = 0f;

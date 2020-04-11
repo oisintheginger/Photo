@@ -1,10 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovementScript : MonoBehaviour
 {
+    public AudioSource PlayerAudioSource;
+    [SerializeField] AudioClip footstepSound;
+    public float maxHealth, health;
+
     [SerializeField] string horizontalAxis, verticalAxis, turningAxis, jumpAxis;
+    [SerializeField] Image healthBar;
 
     Rigidbody pRB;
     [SerializeField] Vector3 appliedForce;
@@ -19,7 +25,7 @@ public class PlayerMovementScript : MonoBehaviour
     private void Awake()
     {
         pRB = this.gameObject.GetComponent<Rigidbody>();
-        pRB.drag = 0f;
+       // pRB.drag = 0f;
         storedMaxSpeed = maxSpeed;
     }
 
@@ -29,9 +35,30 @@ public class PlayerMovementScript : MonoBehaviour
         GroundCheck();
         groundCheckRay = new Ray(groundTransform.position, -transform.up);
         Motion();
+        healthBar.fillAmount = health / maxHealth;
+        FootStepSound();
         
     }
 
+
+    float timer = 0.5f;
+    public void FootStepSound()
+    {
+        if(Mathf.Abs(Input.GetAxis("Vertical"))>0&&isGrounded|| Mathf.Abs(Input.GetAxis("Horizontal")) > 0&&isGrounded)
+        {
+            if (timer <= 0f)
+            {
+                PlayerAudioSource.PlayOneShot(footstepSound);
+                timer = 0.6f;
+            }
+            else
+            {
+                timer -= Time.deltaTime;
+            }
+        }
+        
+    }
+    
 
     void GroundCheck()
     {
