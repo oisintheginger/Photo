@@ -6,7 +6,7 @@ public class CameraMotionScript : MonoBehaviour
 {
     Vector2 mouseL;
     Vector2 smoothV;
-    public float sensitivityX, sensitivityY;
+    public float sensitivityX,minX,maxX, sensitivityY,minY,maxY;
     public float smoothing;
 
     float playerVelocity, playerMaxVelocity;
@@ -21,6 +21,8 @@ public class CameraMotionScript : MonoBehaviour
 
     private void Start()
     {
+        maxX = sensitivityX;
+        maxY = sensitivityY;
         character = this.transform.parent.gameObject;
         
     }
@@ -29,8 +31,31 @@ public class CameraMotionScript : MonoBehaviour
     // First person camera script Found here: https://www.youtube.com/watch?v=blO039OzUZc
     private void FixedUpdate()
     {
+        
         playerVelocity = this.transform.parent.gameObject.GetComponent<PlayerMovementScript>().xZPlaneSpeed;
         playerMaxVelocity = this.transform.parent.gameObject.GetComponent<PlayerMovementScript>().maxSpeed;
+
+        float tempX = Mathf.Clamp(sensitivityX, minX, maxX);
+        float tempY = Mathf.Clamp(sensitivityY, minY, maxY);
+
+
+
+        if (Mathf.Abs(Input.GetAxis("Zoom")) > 0)
+        {
+            tempX -= Input.GetAxis("Zoom") * Time.deltaTime * (maxX - minX);
+            tempY -= Input.GetAxis("Zoom") * Time.deltaTime * (maxY - minY);
+        }
+
+        if(Input.GetAxis("RightTrigger") < 0)
+        {
+            sensitivityX = tempX;
+            sensitivityY = tempY;
+        }
+        else
+        {
+            sensitivityX = maxX;
+            sensitivityY = maxY;
+        }
 
         #region FPS Camera Stuff
         var md = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));

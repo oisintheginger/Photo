@@ -53,14 +53,15 @@ public class CameraShoot : MonoBehaviour
         StoredPropertyUI.text = "Storing "+ myStoredProperties.storedGameObjectTag;
         fovDefault = Mathf.Clamp(fovDefault, minFOV, maxFOV);
         heldCamera.GetComponent<Camera>().fieldOfView = fovDefault;
-        if (Mathf.Abs(Input.GetAxis("Zoom"))>0)
-        {
-            fovDefault += FOVScaler * -Input.GetAxis("Zoom") * Time.deltaTime;
-        }
+        
         
         if (Input.GetAxis("RightTrigger") < 0)
         {
-            
+            if (Mathf.Abs(Input.GetAxis("Zoom")) > 0)
+            {
+                fovDefault += FOVScaler * -Input.GetAxis("Zoom") * Time.deltaTime;
+            }
+
             Aiming = true;
             if (Input.GetButtonDown("Read"))
             {
@@ -74,6 +75,7 @@ public class CameraShoot : MonoBehaviour
         else
         {
             Aiming = false;
+            fovDefault = maxFOV;
         }
 
         MoveCameraToPosition(Aiming);
