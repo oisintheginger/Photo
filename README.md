@@ -6,6 +6,7 @@ apply them to another. A simple puzzle platformer, it takes a lot of inspiration
 [![](http://img.youtube.com/vi/x9vUzt9xhnI/0.jpg)](http://www.youtube.com/watch?v=x9vUzt9xhnI "")
 
 ## Screenshots:
+![](PrototypeScreenshots/Room1.png)
 
 
 # Asset References:
