@@ -32,6 +32,10 @@ public class PlayerMovementScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if(Input.GetButtonDown("Quit"))
+        {
+            Application.Quit();
+        }
         GroundCheck();
         groundCheckRay = new Ray(groundTransform.position, -transform.up);
         Motion();
