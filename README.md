@@ -7,6 +7,10 @@ apply them to another. A simple puzzle platformer, it takes a lot of inspiration
 
 ## Screenshots:
 ![](PrototypeScreenshots/Room1.png)
+![](PrototypeScreenshots/Room2.png)
+![](PrototypeScreenshots/Room3.png)
+![](PrototypeScreenshots/Room4.png)
+![](PrototypeScreenshots/Room5.png)
 
 
 # Asset References:
