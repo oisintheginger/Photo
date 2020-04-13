@@ -10,7 +10,7 @@ public class TimeToDeath : MonoBehaviour
     }
     IEnumerator Timer(GameObject objectToDestroy)
     {
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(3f);
         GameObject.Destroy(objectToDestroy);
     }
 }

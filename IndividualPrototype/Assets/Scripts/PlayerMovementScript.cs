@@ -7,6 +7,7 @@ public class PlayerMovementScript : MonoBehaviour
 {
     public AudioSource PlayerAudioSource;
     [SerializeField] AudioClip footstepSound;
+    
     public float maxHealth, health;
 
     [SerializeField] string horizontalAxis, verticalAxis, turningAxis, jumpAxis;
@@ -24,6 +25,7 @@ public class PlayerMovementScript : MonoBehaviour
     Ray groundCheckRay;
     private void Awake()
     {
+
         pRB = this.gameObject.GetComponent<Rigidbody>();
        // pRB.drag = 0f;
         storedMaxSpeed = maxSpeed;
