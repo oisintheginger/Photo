@@ -1,13 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class bouncePlatformScript : MonoBehaviour
 {
+
+    [SerializeField]TMP_Text thresholdIndicator;
+
+
     public bool isBouncy =false;
     public float bounceThreshhold, underBounce;
     public float bounceForce;
     public float maxBounce;
+
+    private void Awake()
+    {
+        thresholdIndicator.text = "Velocity threshold: "+ bounceThreshhold.ToString()+"M/s";
+    }
 
     //Vector3 debugVector1, debugVector2;
 
