@@ -9,8 +9,13 @@ public class FollowPath : MonoBehaviour
     public bool Active=false;
     Rigidbody followerRB;
     int currentPathPoint = 0;
+
+    [SerializeField] float waitTime=0.5f;
+
+    float timer =0.5f;
     private void Awake()
     {
+        timer = waitTime;
         followerRB = this.gameObject.GetComponent<Rigidbody>();
     }
     private void FixedUpdate()
@@ -24,17 +29,30 @@ public class FollowPath : MonoBehaviour
     {
         //followerRB.velocity = (myPath.pathPoints[currentPathPoint].position - this.transform.position).normalized * 2f;
         //followerRB.AddForce((myPath.pathPoints[currentPathPoint].position - this.transform.position).normalized*100f);
-        followerRB.MovePosition(this.transform.position + (myPath.pathPoints[currentPathPoint].position - this.transform.position).normalized *Time.deltaTime*speed);
-        if(Vector3.Distance(this.transform.position, myPath.pathPoints[currentPathPoint].position)<1f)
+        if (timer >= waitTime)
         {
-            if(currentPathPoint<myPath.pathPoints.Count-1)
+            followerRB.MovePosition(this.transform.position + (myPath.pathPoints[currentPathPoint].position - this.transform.position).normalized * Time.deltaTime * speed);
+        }
+        if(Vector3.Distance(this.transform.position, myPath.pathPoints[currentPathPoint].position)<0.3f)
+        {
+            if (timer <= 0)
             {
-                currentPathPoint++;
+                if (currentPathPoint < myPath.pathPoints.Count - 1)
+                {
+                    currentPathPoint++;
+                }
+                else
+                {
+                    currentPathPoint = 0;
+                }
+                timer = waitTime;
             }
             else
             {
-                currentPathPoint = 0;
+                timer -= Time.deltaTime/2f;
             }
         }
     }
+
+    
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.AI;
+using UnityEngine.UI;
 using TMPro;
 
 [System.Serializable]
@@ -19,13 +19,13 @@ public class StoredProperties
 
 public class CameraShoot : MonoBehaviour
 {
-    [SerializeField] TMP_Text StoredPropertyUI;
     [SerializeField] Camera heldCamera;
     [SerializeField] float FOVScaler, minFOV, maxFOV, fovDefault;
     [SerializeField] GameObject cameraObject;
     [SerializeField] AudioSource playerAudioSource;
     [SerializeField] AudioClip readPropertySFX, applyPropertySFX, enemyKill;
 
+    [SerializeField] GameObject bouncyIcon, massIcon, movingIcon, electricityIcon, timingIcon;
 
     public StoredProperties myStoredProperties;
 
@@ -51,9 +51,10 @@ public class CameraShoot : MonoBehaviour
     
     private void Update()
     {
-        StoredPropertyUI.text = "Storing "+ myStoredProperties.storedGameObjectTag;
         fovDefault = Mathf.Clamp(fovDefault, minFOV, maxFOV);
         heldCamera.GetComponent<Camera>().fieldOfView = fovDefault;
+        
+
         
         
         if (Input.GetAxis("RightTrigger") < 0)
@@ -84,6 +85,8 @@ public class CameraShoot : MonoBehaviour
 
     void ReadProperties()
     {
+        ClearStoredProperties();
+        myStoredProperties.StoredTagsList.Clear();
         camerashootRay = new Ray(heldCamera.transform.position, heldCamera.transform.forward);
         RaycastHit rH;
         if (Physics.Raycast(camerashootRay, out rH, 100f))
@@ -92,7 +95,7 @@ public class CameraShoot : MonoBehaviour
             {
                 var tagReading = rH.collider.gameObject.GetComponent<NewPropertyTagContainer>();
                 GameObject readObject = rH.collider.gameObject;
-                myStoredProperties.StoredTagsList.Clear();
+                
                 foreach(string tag in tagReading.readTags)
                 {
                     myStoredProperties.StoredTagsList.Add(tag);
@@ -106,37 +109,39 @@ public class CameraShoot : MonoBehaviour
                         case "Mass":
                             myStoredProperties.Mass = readObject.GetComponent<Rigidbody>().mass;
                             playerAudioSource.PlayOneShot(readPropertySFX);
-                            Debug.Log("New Reading: Mass " + myStoredProperties.Mass);
+                            massIcon.SetActive(true);
                             break;
 
                         case "Electricity":
                             myStoredProperties.Electricity = 10f;
                             playerAudioSource.PlayOneShot(readPropertySFX);
-                            Debug.Log("Read: Electricity " + myStoredProperties.Electricity);
+                            electricityIcon.SetActive(true);
                             break;
 
                         case "Timed":
                             myStoredProperties.Timed = true;
                             playerAudioSource.PlayOneShot(readPropertySFX);
-                            Debug.Log("Read: Timed " + myStoredProperties.Timed);
+                            timingIcon.SetActive(true);
                             break;
 
 
                         case "Moving":
                             myStoredProperties.Moving = true;
                             playerAudioSource.PlayOneShot(readPropertySFX);
-                            Debug.Log("Read: Moving " + myStoredProperties.Moving);
+                            movingIcon.SetActive(true);
                             break;
 
                         case "Bouncy":
                             myStoredProperties.Bounce = true;
                             playerAudioSource.PlayOneShot(readPropertySFX);
+                            bouncyIcon.SetActive(true);
                             break;
                     }
                 }
             }
 
             #region Old Reading stuff
+            /*
             var objecttoRead = rH.collider.gameObject;
             switch (rH.collider.gameObject.tag)
             {
@@ -165,7 +170,9 @@ public class CameraShoot : MonoBehaviour
                     playerAudioSource.PlayOneShot(readPropertySFX);
                     break;
             }
+            */
             #endregion
+        
         }
     }
 
@@ -178,54 +185,97 @@ public class CameraShoot : MonoBehaviour
 
             if(rH.collider.gameObject.GetComponent<NewPropertyTagContainer>()!=null)
             {
-                Debug.Log("Got here");
                 var objectApplyTags = rH.collider.gameObject.GetComponent<NewPropertyTagContainer>();
                 var objectToApply = rH.collider.gameObject;
                 foreach (string storedTag in myStoredProperties.StoredTagsList)
                 {
                     
-                    if (objectApplyTags.applyTags.Count > 0)
+                    for (int i = 0; i < objectApplyTags.applyTags.Count; i++)
                     {
-                        for (int i = 0; i < objectApplyTags.applyTags.Count; i++)
+                        if (storedTag == objectApplyTags.applyTags[i])
                         {
-                            if (storedTag == objectApplyTags.applyTags[i])
+                            switch (objectApplyTags.applyTags[i])
                             {
-                                switch (objectApplyTags.applyTags[i])
-                                {
-                                    case "Mass":
-                                        objectToApply.GetComponent<Rigidbody>().mass = myStoredProperties.Mass;
+                                case "Mass":
+                                    objectToApply.GetComponent<Rigidbody>().mass = myStoredProperties.Mass;
                                         
-                                        break;
+                                    break;
 
-                                    case "Electricity":
-                                        objectToApply.GetComponent<ElectricityProperty>().powerLevel += myStoredProperties.Electricity;
+                                case "Electricity":
+                                    objectToApply.GetComponent<ElectricityProperty>().powerLevel += myStoredProperties.Electricity;
                                         
-                                        break;
+                                    break;
 
-                                    case "Timed":
-                                        objectToApply.GetComponent<TimedProperty>().activate = myStoredProperties.Timed;
+                                case "Timed":
+                                    objectToApply.GetComponent<TimedProperty>().activate = myStoredProperties.Timed;
                                         
-                                        break;
+                                    break;
 
 
-                                    case "Moving":
-                                        objectToApply.GetComponent<FollowPath>().Active = myStoredProperties.Moving;
+                                case "Moving":
+                                    objectToApply.GetComponent<FollowPath>().Active = myStoredProperties.Moving;
                                         
-                                        break;
-                                    case "Bouncy":
-                                        rH.collider.GetComponent<bouncePlatformScript>().isBouncy = myStoredProperties.Bounce;
-                                        playerAudioSource.PlayOneShot(readPropertySFX);
-                                        break;
-                                }
+                                    break;
+                                case "Bouncy":
+                                    rH.collider.GetComponent<bouncePlatformScript>().isBouncy = myStoredProperties.Bounce;
+                                    if(myStoredProperties.Bounce == true&& rH.collider.gameObject.GetComponent<bouncePlatformScript>().activeText!=null)
+                                    {
+                                        rH.collider.gameObject.GetComponent<bouncePlatformScript>().activeText.text = "Active";
+                                    }
+                                    playerAudioSource.PlayOneShot(readPropertySFX);
+                                    break;
                             }
                         }
-                        
                     }
+                        
+                    
                 }
                 ClearStoredProperties();
                 playerAudioSource.PlayOneShot(applyPropertySFX);
+            } 
+
+            if (rH.collider.gameObject.tag =="Enemy")
+            {
+                AudioSource enemyAudio = rH.collider.gameObject.GetComponent<AudioSource>();
+                for (int i = 0; i < myStoredProperties.StoredTagsList.Count; i++)
+                {
+
+                    switch (myStoredProperties.StoredTagsList[i])
+                    {
+                        case "Mass":
+                            if (1 <= myStoredProperties.Mass)
+                            {
+                                rH.collider.gameObject.GetComponent<EnemyScript>().aggressiveSpeed *= 0.25f;
+                                rH.collider.gameObject.GetComponent<EnemyScript>().passiveSpeed *= 0.25f;
+                                rH.collider.gameObject.GetComponent<EnemyScript>().ShootingTimer *= 2f;
+
+                            }
+                            else
+                            {
+                                rH.collider.gameObject.GetComponent<EnemyScript>().aggressiveSpeed *= 1.5f;
+                                rH.collider.gameObject.GetComponent<EnemyScript>().passiveSpeed *= 1.5f;
+                                rH.collider.gameObject.GetComponent<EnemyScript>().ShootingTimer *= 0.5f;
+                            }
+                            enemyAudio.PlayOneShot(enemyKill);
+                            break;
+
+                        case "Electricity":
+                            enemyAudio.PlayOneShot(enemyKill);
+                            rH.collider.gameObject.GetComponentInChildren<Animator>().SetTrigger("Death");
+                            Destroy(rH.collider.gameObject, 0.8f);
+                            break;
+
+                        case "Timed":
+                            StartCoroutine(kill(rH.collider.gameObject, enemyAudio));
+                            playerAudioSource.PlayOneShot(applyPropertySFX);
+                            break;
+                    }
+                }
+
+                ClearStoredProperties();
             }
             #region Old Apply stuff
+            /*
             var objectToAlter = rH.collider.gameObject;
             if (myStoredProperties.storedGameObjectTag + "Apply" == rH.collider.gameObject.tag)
             {
@@ -254,46 +304,8 @@ public class CameraShoot : MonoBehaviour
                 }
                 playerAudioSource.PlayOneShot(applyPropertySFX);
             }
-            if(rH.collider.tag =="Enemy")
-            {
-                AudioSource enemyAudio = rH.collider.gameObject.GetComponent<AudioSource>();
-                switch (myStoredProperties.storedGameObjectTag)
-                {
-                    case "Mass":
-                        if(1 <= myStoredProperties.Mass)
-                        {
-                            Debug.Log("less than");
-                            rH.collider.gameObject.GetComponent<EnemyScript>().aggressiveSpeed *= 0.25f;
-                            rH.collider.gameObject.GetComponent<EnemyScript>().passiveSpeed *= 0.25f;
-                            rH.collider.gameObject.GetComponent<EnemyScript>().ShootingTimer *= 2f;
-                        }
-                        else
-                        {
-                            
-                            rH.collider.gameObject.GetComponent<EnemyScript>().aggressiveSpeed *= 1.5f;
-                            rH.collider.gameObject.GetComponent<EnemyScript>().passiveSpeed *= 1.5f;
-                            rH.collider.gameObject.GetComponent<EnemyScript>().ShootingTimer *= 0.5f;
-                        }
-                        enemyAudio.PlayOneShot(enemyKill);
-                        ClearStoredProperties();
-                        break;
-
-                    case "Electricity":
-                        enemyAudio.PlayOneShot(enemyKill);
-                        rH.collider.gameObject.GetComponentInChildren<Animator>().SetTrigger("Death");
-                        Destroy(rH.collider.gameObject, 0.8f);
-                        ClearStoredProperties();
-                        break;
-
-                    case "Timed":
-                        StartCoroutine(kill(rH.collider.gameObject, enemyAudio));
-                        playerAudioSource.PlayOneShot(applyPropertySFX);
-                        //Kill enemys after time limit
-                        break;
-                }
-            }
-
-            #endregion 
+            */
+            #endregion
         }
     }
 
@@ -315,6 +327,12 @@ public class CameraShoot : MonoBehaviour
         {
             myStoredProperties.StoredTagsList.Clear();
         }
+
+        bouncyIcon.SetActive(false);
+        movingIcon.SetActive(false);
+        massIcon.SetActive(false);
+        electricityIcon.SetActive(false);
+        timingIcon.SetActive(false);
     }
     void MoveCameraToPosition(bool isAiming)
     {

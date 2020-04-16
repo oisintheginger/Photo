@@ -72,6 +72,8 @@ public class EnemyScript : MonoBehaviour
 
             if (Vector3.Distance(this.transform.position, passivePath.pathPoints[currentPathPoint].transform.position) < 1f)
             {
+                currentPathPoint = Random.Range(0, passivePath.pathPoints.Count);
+                /*
                 if (currentPathPoint < passivePath.pathPoints.Count - 1)
                 {
                     currentPathPoint++;
@@ -80,6 +82,7 @@ public class EnemyScript : MonoBehaviour
                 {
                     currentPathPoint = 0;
                 }
+                */
             }
         }
     }

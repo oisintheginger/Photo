@@ -7,7 +7,7 @@ public class bouncePlatformScript : MonoBehaviour
 {
 
     [SerializeField]TMP_Text thresholdIndicator;
-
+    public TMP_Text activeText;
 
     public bool isBouncy =false;
     public float bounceThreshhold, underBounce;
@@ -16,7 +16,18 @@ public class bouncePlatformScript : MonoBehaviour
 
     private void Awake()
     {
-        thresholdIndicator.text = "Velocity threshold: "+ bounceThreshhold.ToString()+"M/s";
+        if (thresholdIndicator != null && activeText != null)
+        {
+            thresholdIndicator.text = "Velocity threshold: " + bounceThreshhold.ToString() + "M/s";
+            if (isBouncy)
+            {
+                activeText.text = "Active";
+            }
+            else
+            {
+                activeText.text = "Not Active";
+            }
+        }
     }
 
     //Vector3 debugVector1, debugVector2;
@@ -45,6 +56,7 @@ public class bouncePlatformScript : MonoBehaviour
         }
     }
 
+    
 
     /*
     private void OnDrawGizmos()

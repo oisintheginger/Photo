@@ -13,7 +13,7 @@ public class ElectricityProperty : MonoBehaviour
     [SerializeField] Image powerImage;
     public UnityEvent activatePower;
     
-    void Update()
+    void FixedUpdate()
     {
         float pL = Mathf.Clamp(powerLevel / powerThreshold, 0f, 1f);
         if(powerLevel>= powerThreshold)

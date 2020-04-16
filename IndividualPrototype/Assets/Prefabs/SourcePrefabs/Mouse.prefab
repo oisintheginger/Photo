@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3688346035837699166}
   - component: {fileID: 3688346035837699137}
   - component: {fileID: 3688346035837699136}
+  - component: {fileID: 6238208495456735384}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Moving
@@ -93,6 +94,21 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6238208495456735384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688346035837699138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0afc9b799bd206d46867d89aa2c77de5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  readTags:
+  - Moving
+  applyTags: []
 --- !u!1 &3688346036045962870
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,6 +124,7 @@ GameObject:
   - component: {fileID: 3688346036045962867}
   - component: {fileID: 3688346036045962865}
   - component: {fileID: 3688346036045962864}
+  - component: {fileID: 1748328748663681807}
   m_Layer: 0
   m_Name: Mouse
   m_TagString: Moving
@@ -239,6 +256,21 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &1748328748663681807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688346036045962870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0afc9b799bd206d46867d89aa2c77de5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  readTags:
+  - Moving
+  applyTags: []
 --- !u!1 &3688346036582821893
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,6 +283,7 @@ GameObject:
   - component: {fileID: 3688346036582821889}
   - component: {fileID: 3688346036582821888}
   - component: {fileID: 3688346036582821891}
+  - component: {fileID: 3934953757064385748}
   m_Layer: 0
   m_Name: Sphere (1)
   m_TagString: Moving
@@ -332,6 +365,21 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3934953757064385748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688346036582821893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0afc9b799bd206d46867d89aa2c77de5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  readTags:
+  - Moving
+  applyTags: []
 --- !u!1 &3688346036594346605
 GameObject:
   m_ObjectHideFlags: 0
