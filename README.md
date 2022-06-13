@@ -1,4 +1,4 @@
-# IndividualPrototypeRepo
+# Photo
 This prototype is for an assignment for my Prototyping module in TU984 at Technological University Dublin City Campus.
 This game is called Photo, where the player has access to a magic camera that can take the properties of an object and 
 apply them to another. A simple puzzle platformer, it takes a lot of inspiration from an unreleased Portal prototype.
