@@ -3,6 +3,8 @@ This prototype is for an assignment for my prototyping module in TU984 at Techno
 This game is called Photo, where the player has access to a magic camera that can take the properties of an object and 
 apply them to another. A simple puzzle platformer, it takes a lot of inspiration from an unreleased Portal prototype.
 
+[![](http://img.youtube.com/vi/v77GwWvpm0w/0.jpg)](http://www.youtube.com/watch?v=v77GwWvpm0w "")
+
 [![](http://img.youtube.com/vi/h_grghWB03A/0.jpg)](http://www.youtube.com/watch?v=h_grghWB03A "")
 
 [![](http://img.youtube.com/vi/x9vUzt9xhnI/0.jpg)](http://www.youtube.com/watch?v=x9vUzt9xhnI "")
